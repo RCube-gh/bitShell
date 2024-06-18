@@ -26,10 +26,15 @@ int main(void){
 	for(;;){
 		printf("> ");
 		char input_str[1024];
-		// scanf("%[^\n]%*s",input_str);
-		scanf("%s",input_str);
+		// scanf("%s",input_str);
 		// fgets(input_str, sizeof(input_str), stdin);
+		if(fgets(input_str, sizeof(input_str),stdin) != NULL){
 		len=(int)strlen(input_str);
+			if(len>0&&input_str[len-1]=='\n'){
+				input_str[len-1]='\0';
+			}
+		}
+		len--;
 		reti = regexec(&re, input_str, 0, NULL, 0);
 		if(len%8!=0||reti){
 			printf("ERROR: INVALID COMMAND\n");
