@@ -15,7 +15,6 @@ int main(void){
 	regex_t re;
 	regmatch_t m;
 	int reti;
-	//int binchar[8];
 	int dec;
 
 	reti = regcomp(&re, "^[01]+$", REG_EXTENDED);
@@ -27,21 +26,18 @@ int main(void){
 	for(;;){
 		printf("> ");
 		char input_str[1024];
+		// scanf("%[^\n]%*s",input_str);
 		scanf("%s",input_str);
 		// fgets(input_str, sizeof(input_str), stdin);
-		len=(int)strlen(input_str) - 1;
-		if(strlen(input_str)%8!=0){
+		len=(int)strlen(input_str);
+		reti = regexec(&re, input_str, 0, NULL, 0);
+		if(len%8!=0||reti){
 			printf("ERROR: INVALID COMMAND\n");
 			printf("print binary\n");
 			printBin(input_str);
 			continue;
 		}
 
-		reti = regexec(&re, input_str, 0, NULL, 0);
-		if(reti){
-			printf("no match\n");
-			continue;
-		}
 		char command_string[256];
 		for(int i=0;i<(len/8);i++){
 			dec = b2d(&input_str[i*8]);
@@ -53,7 +49,6 @@ int main(void){
 }
 
 
-
 int b2d(char *n){
 	int d = 0;
 	int base = 1;
@@ -63,7 +58,6 @@ int b2d(char *n){
 	}
 	return d;
 }
-
 
 void printBin(char *s){
 	int l=strlen(s);
