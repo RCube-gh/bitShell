@@ -2,11 +2,14 @@
 #include<stdlib.h>
 #include<regex.h>
 #include<string.h>
-
+#include<unistd.h>
+#include<sys/types.h>
+#include<sys/wait.h>
 
 
 int b2d(char *n);
 void printBin(char *s);
+void execute(char *cs);
 
 int main(void){
 
@@ -25,7 +28,10 @@ int main(void){
 
 	for(;;){
 		printf("> ");
-		char input_str[1024];
+		char input_str[1024]="";
+		for(int i=0;i<1024;i++){
+			input_str[i]='\0';
+		}
 		// scanf("%s",input_str);
 		// fgets(input_str, sizeof(input_str), stdin);
 		if(fgets(input_str, sizeof(input_str),stdin) != NULL){
@@ -42,13 +48,13 @@ int main(void){
 			printBin(input_str);
 			continue;
 		}
-
-		char command_string[256];
+		char command_string[256]="";
 		for(int i=0;i<(len/8);i++){
 			dec = b2d(&input_str[i*8]);
 			command_string[i]=(char)dec;
 		}
 		printf("%s\n",command_string);
+		execute(command_string);
 	}
 	return 0;
 }
@@ -79,4 +85,17 @@ void printBin(char *s){
 		printf("\n");
 	}
 
+}
+
+void execute(char *cs){
+		char *token = strtok(cs, " ");
+		int nargs=0;
+		char *args[30];
+		args[nargs++]=token;
+		while(token!=NULL){
+			token=strtok(NULL, " ");
+			if(token!=NULL)args[nargs++]=token;
+		}
+		args[nargs]='\0';
+		execv(args[0],args);
 }
