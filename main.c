@@ -35,7 +35,7 @@ int main(void){
 		// scanf("%s",input_str);
 		// fgets(input_str, sizeof(input_str), stdin);
 		if(fgets(input_str, sizeof(input_str),stdin) != NULL){
-		len=(int)strlen(input_str);
+			len=(int)strlen(input_str);
 			if(len>0&&input_str[len-1]=='\n'){
 				input_str[len-1]='\0';
 			}
@@ -44,8 +44,10 @@ int main(void){
 		reti = regexec(&re, input_str, 0, NULL, 0);
 		if(len%8!=0||reti){
 			printf("ERROR: INVALID COMMAND\n");
-			printf("print binary\n");
-			printBin(input_str);
+			if(reti){
+				printf("print binary\n");
+				printBin(input_str);
+			}
 			continue;
 		}
 		char command_string[256]="";
@@ -80,7 +82,7 @@ void printBin(char *s){
 			}else{
 				printf("0");
 			}
-			
+
 		}
 		printf("\n");
 	}
@@ -88,14 +90,14 @@ void printBin(char *s){
 }
 
 void execute(char *cs){
-		char *token = strtok(cs, " ");
-		int nargs=0;
-		char *args[30];
-		args[nargs++]=token;
-		while(token!=NULL){
-			token=strtok(NULL, " ");
-			if(token!=NULL)args[nargs++]=token;
-		}
-		args[nargs]='\0';
-		execv(args[0],args);
+	char *token = strtok(cs, " ");
+	int nargs=0;
+	char *args[30];
+	args[nargs++]=token;
+	while(token!=NULL){
+		token=strtok(NULL, " ");
+		if(token!=NULL)args[nargs++]=token;
+	}
+	args[nargs]='\0';
+	execvp(args[0],args);
 }
